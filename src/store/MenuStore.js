@@ -15,7 +15,8 @@ export default {
                 title:'首页',
                 name:'desktop'
             }
-        ]
+        ],
+        menu_data:[]
     },
     mutations: {
         //菜单点击时，调用
@@ -45,6 +46,31 @@ export default {
         //设置当前激活的选项卡
         setActiveTabs(state,val){
             state.editableTabsValue = val;
+        },
+        getMenuList(state,router){
+            //1.取出菜单数据
+            let menuList = sessionStorage.getItem('menuList');
+            //2.设置菜单数据
+            if(menuList){
+                state.menu_data = JSON.parse(menuList);
+            }
+            //3.取出路由数据
+            let oldrouterList = sessionStorage.getItem('routerList');
+            let routerList = [];
+            if(oldrouterList){
+                routerList = JSON.parse(oldrouterList);
+            }
+            //4.动态的生成路由
+                //4.1获取原来的路由
+            let oldRouter = router.options.routes;
+            //遍历后台返回的路由数据，动态生成路由
+            //component: () => import(/* webpackChunkName: "about" */ '../views/Login.vue')
+            routerList.forEach(item =>{
+                item.component = () => import(`@/views${item.url}.vue`);
+                oldRouter[1].children.push(item);
+            })
+            //5.添加到现有路由里面
+            router.addRoutes(oldRouter);
         }
     },
     actions: {

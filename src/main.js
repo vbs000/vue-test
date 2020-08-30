@@ -19,7 +19,37 @@ router.beforeEach((to,from,next) =>{
   store.commit('getTabs');
   //设置当前激活的选项卡
   store.commit('setActiveTabs',to.name);
-  next();
+  //解决刷新之后菜单数据不存在的问题
+
+  let menuData = sessionStorage.getItem('menuList');
+  if(to.path === '/login'){
+    if(menuData){
+      next({path:'/home'});
+    }else{
+      next();
+    }
+  }else{
+    if(!menuData && to.name !== 'login'){
+      next({path:'/login'});
+    }else{
+      if(store.state.MenuStore.menu_data.length == 0){
+        store.commit('getMenuList',router);
+        next({path:to.path});
+      }else{
+        next();
+      }
+    }
+  }
+
+  // if(store.state.MenuStore.menu_data.length == 0 ){
+  //   store.commit('getMenuList',router);
+  //   next({path:to.path});
+  // }else{
+  //   next();
+  // }
+  
+  
+
 })
 
 new Vue({

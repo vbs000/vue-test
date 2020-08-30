@@ -9,18 +9,18 @@ return VueRouterPush.call(this, to).catch(err => err)
 }
 
   const routes = [
-  {
-    path:'/box',
-    name:'box',
-    component: () => import(/* webpackChunkName: "about" */ '../views/test/box.vue')
-  },
+  // {
+  //   path:'/box',
+  //   name:'box',
+  //   component: () => import(/* webpackChunkName: "about" */ '../views/test/box.vue')
+  // },
   {
     path:'/login',
     name:'login',
     component: () => import(/* webpackChunkName: "about" */ '../views/Login.vue')
   },
   {
-    path: '/',
+    path: '/home',
     name: 'Home',
     component: Home,
     children:[
@@ -29,26 +29,27 @@ return VueRouterPush.call(this, to).catch(err => err)
         path:'/desktop',
         component: () => import(/* webpackChunkName: "about" */ '@/views/Desktop.vue')
 
-      },{
-      path:'/departmentList',
-      name:'departmentList',
-      component: () => import(/* webpackChunkName: "about" */ '@/views/system/Department/DepartmentList.vue')
-    },
-    {
-      path:'/menuList',
-      name:'menuList',
-      component: () => import(/* webpackChunkName: "about" */ '@/views/system/Menu/MenuList.vue')
-    },
-    {
-      path:'/roleList',
-      name:'roleList',
-      component: () => import(/* webpackChunkName: "about" */ '@/views/system/Role/RoleList.vue')
-    },
-    {
-      path:'/userList',
-      name:'userList',
-      component: () => import(/* webpackChunkName: "about" */ '@/views/system/User/UserList.vue')
-    }
+      }
+    //   ,{
+    //   path:'/departmentList',
+    //   name:'departmentList',
+    //   component: () => import(/* webpackChunkName: "about" */ '@/views/system/Department/DepartmentList.vue')
+    // },
+    // {
+    //   path:'/menuList',
+    //   name:'menuList',
+    //   component: () => import(/* webpackChunkName: "about" */ '@/views/system/Menu/MenuList.vue')
+    // },
+    // {
+    //   path:'/roleList',
+    //   name:'roleList',
+    //   component: () => import(/* webpackChunkName: "about" */ '@/views/system/Role/RoleList.vue')
+    // },
+    // {
+    //   path:'/userList',
+    //   name:'userList',
+    //   component: () => import(/* webpackChunkName: "about" */ '@/views/system/User/UserList.vue')
+    // }
     ]
   },
   {
