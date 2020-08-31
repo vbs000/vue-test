@@ -10,6 +10,9 @@ import 'element-ui/lib/theme-chalk/index.css';
 import './assets/css/flex.css'
 Vue.use(ElementUI)
 Vue.config.productionTip = false
+//引入fragment解决菜单收缩时文字不能隐藏的问题
+import Fragment from 'vue-fragment'
+Vue.use(Fragment.Plugin)
 //进入路由之前执行
 router.beforeEach((to,from,next) =>{
   //to 将要进入的路由

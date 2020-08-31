@@ -16,7 +16,9 @@ export default {
                 name:'desktop'
             }
         ],
-        menu_data:[]
+        menu_data:[],
+        //菜单收缩属性
+        isCollapse:false
     },
     mutations: {
         //菜单点击时，调用
@@ -71,6 +73,10 @@ export default {
             })
             //5.添加到现有路由里面
             router.addRoutes(oldRouter);
+        },
+        //设置收缩菜单属性
+        setOpenOrClose(state){
+            state.isCollapse = !state.isCollapse;
         }
     },
     actions: {

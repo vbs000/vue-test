@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <fragment>
         <template v-for="menu in menuList">
 
           <el-submenu v-if='menu.children.length > 0' :index="menu.path" :key="menu.path">
@@ -18,7 +18,7 @@
 
 
       
-    </div>
+    </fragment>
 </template>
 
 <script>

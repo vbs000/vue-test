@@ -2,7 +2,7 @@
     <el-menu 
     :default-active="$route.path"
     class="menu-bar" 
-
+    :collapse="isCollapse"
     unique-opened
     >
       <menu-item :menuList = 'menuList'></menu-item>
@@ -18,7 +18,10 @@
         name:'MenuBar',
         computed:{
           ...mapState({
-            menuList: state => state.MenuStore.menu_data
+            //vuex中的菜单数据获取
+            menuList: state => state.MenuStore.menu_data,
+            //获取vuex中的isCollapse属性
+            isCollapse:state => state.MenuStore.isCollapse
           })
         },
         components:{

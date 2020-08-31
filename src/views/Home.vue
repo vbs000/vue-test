@@ -29,6 +29,12 @@
     <!-- 右边内容 -->
     <el-container>
       <el-main style="padding:0;">
+         <!-- 菜单收缩按钮-->
+          <i
+            class="arrowIcon"
+            :class="[isCollapse ? 'el-icon-s-unfold' : ' el-icon-s-fold']"
+            @click="iconClick"
+          ></i>
         <tabs></tabs>
         <router-view></router-view>
       </el-main>
@@ -42,11 +48,22 @@
 // @ is an alias to /src
 import MenuBar from "../components/MenuBar.vue";
 import tabs from '../components/tabs.vue'
+import {mapState} from 'vuex'
+
 export default {
   name: 'Home',
   components: {
     MenuBar,
     tabs
+  },computed:{
+    ...mapState({
+      isCollapse: state => state.MenuStore.isCollapse
+    })
+  },methods:{
+    iconClick(){
+      console.log('click');
+      this.$store.commit('setOpenOrClose');
+    }
   }
 }
 </script>
@@ -83,5 +100,17 @@ export default {
   .el-aside{
     border-right:1px solid #e6e6e6;
   }
-  
+  .arrowIcon {
+  font-size: 24px;
+  border: 1px solid transparent;
+  float: left;
+  height: 39px;
+  width: 50px;
+  background: #eaedf1;
+  text-align: center;
+  line-height: 39px !important;
+  }
+  .el-tabs__header {
+  position: static !important;
+  }
 </style>
