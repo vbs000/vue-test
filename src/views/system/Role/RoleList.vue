@@ -9,7 +9,7 @@
                     </el-form-item>
                </el-col>
                 <el-button size="mini" type="primary" icon="el-icon-search" class="btn-left">搜索</el-button>
-                <el-button size="mini" type="primary" icon="el-icon-plus" >新增</el-button>
+                <el-button size="mini" type="primary" icon="el-icon-plus" @click="openAddRole" >新增</el-button>
            </el-row>
            
        </el-form>
@@ -42,6 +42,18 @@
                 prop="address"
                 label="地址">
             </el-table-column>
+            <el-table-column label="操作" width="160" align="center">
+                <template>
+                <el-button
+                @click.native.prevent="editRole()" type="primary"
+                size="mini" >编辑
+                </el-button>
+                <el-button
+                @click.native.prevent="deleteRole()" type="danger"
+                size="mini" >删除
+                </el-button>
+                </template>
+            </el-table-column>
             </el-table>
             <!-- 分页组件
             size-change page size改变时调用
@@ -53,13 +65,27 @@
             <el-pagination
             @size-change="handleSizeChange"
             @current-change="handleCurrentChange"
-            :current-page.sync="currentPage1"
+            :current-page.sync="currentPage"
             :page-size="100"
             layout="total, prev, pager, next"
             :total="tableData.length">
             </el-pagination>
-      
-
+            <!--新增角色对话框-->
+            <el-dialog :title="dialogTitle" :visible.sync="visible" width="45%">
+            <el-form :rules="rules" ref="addRole" :model="addRoleForm" size="mini" :inline="true">
+                <el-form-item prop="name" label="角色名称" label-width="80px">
+                <el-input v-model="addRoleForm.name" placeholder="请输入角色名称"></el-input>
+                </el-form-item>
+                <el-form-item prop="remark" label="角色描述" label-width="80px">
+                <el-input v-model="addRoleForm.remark" placeholder="请输入角色描述"></el-input>
+                </el-form-item>
+            </el-form>
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="visible = false">取 消</el-button>
+                <el-button type="primary" @click="confirmBtn">确 定</el-button>
+            </span>
+            </el-dialog>
+            
 
    </el-main>
 </template>
@@ -67,6 +93,33 @@
 <script>
     export default {
         methods: {
+            //确认新增或编辑
+            confirmBtn() {
+                let _this = this;
+                _this.$refs.addRole.validate(valid => {
+                    if(valid){
+                        _this.visible = false;
+                    }
+                })
+               
+            },
+            openAddRole() {
+                this.resetForm("addRole");
+                this.dialogTitle = "新增角色";
+                this.visible = true;
+            },
+            //删除角色事件
+            deleteRole(){
+
+            },
+            //编辑角色事件
+            editRole(){
+
+            },
+            //分配角色事件
+            assignRole(){
+                
+            },
             //page size改变时调用
             handleSizeChange(val) {
                 console.log(`每页 ${val} 条`);
@@ -74,10 +127,37 @@
             //页数改变时调用
             handleCurrentChange(val) {
                 console.log(`当前页: ${val}`);
+            },
+            resetForm(formName) {
+                if (this.$refs[formName]) {
+                    this.$refs[formName].resetFields();
+                }
             }
         },
         data(){
             return{
+                //当前页
+                currentPage:1,
+                //表单验证
+                rules: {
+                    name: [
+                    {
+                        required: true,
+                        trigger: "change",
+                        message: "请输入角色名称"
+                    }
+                    ]
+                },
+                 //新增或编辑角色时数据绑定对象
+                addRoleForm: {
+                    name: "",
+                    remark: ""
+                },
+                  //对话框标题
+                dialogTitle: "",
+                //控制对话框显示和影藏 true 时显示 false 影藏
+                visible: false,
+                //搜索框数据绑定
                 //搜索框数据绑定
                 roleForm:{
                     roleName:""
