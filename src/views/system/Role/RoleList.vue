@@ -42,14 +42,21 @@
                 prop="address"
                 label="地址">
             </el-table-column>
-            <el-table-column label="操作" width="160" align="center">
-                <template>
+            <el-table-column label="操作" width="250" align="center">
+                <template slot-scope="scope">
                 <el-button
-                @click.native.prevent="editRole()" type="primary"
+                @click.native.prevent="editRole(scope.row)" type="primary"
                 size="mini" >编辑
                 </el-button>
+                   
+                 <el-button  
+                 @click.native.prevent="assignRole(scope.row)" type="success"
+                 size="mini" >分配权限
+
+                 </el-button>
+                
                 <el-button
-                @click.native.prevent="deleteRole()" type="danger"
+                @click.native.prevent="deleteRole(scope.row)" type="danger"
                 size="mini" >删除
                 </el-button>
                 </template>
@@ -85,6 +92,14 @@
                 <el-button type="primary" @click="confirmBtn">确 定</el-button>
             </span>
             </el-dialog>
+            <!-- 分配权限弹框 -->
+            <el-dialog :title="authTitle" :visible.sync="dialogVisible" width="30%">
+            <span>这是一段信息</span>
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="dialogVisible = false">取 消</el-button>
+                <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
+            </span>
+            </el-dialog>
             
 
    </el-main>
@@ -109,16 +124,17 @@
                 this.visible = true;
             },
             //删除角色事件
-            deleteRole(){
-
+            deleteRole(row){
+                console.log(row);
             },
             //编辑角色事件
-            editRole(){
-
+            editRole(row){
+                console.log(row);
             },
             //分配角色事件
-            assignRole(){
-                
+            assignRole(row){
+                this.dialogVisible = true;
+                console.log(row);
             },
             //page size改变时调用
             handleSizeChange(val) {
@@ -136,6 +152,10 @@
         },
         data(){
             return{
+                //控制分配权限弹框显示和隐藏
+                dialogVisible:false,
+                //分配权限弹框的标题
+                authTitle:'',
                 //当前页
                 currentPage:1,
                 //表单验证

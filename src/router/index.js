@@ -26,7 +26,7 @@ return VueRouterPush.call(this, to).catch(err => err)
     children:[
       {
         name:'desktop',
-        path:'/desktop',
+        path:'/',
         component: () => import(/* webpackChunkName: "about" */ '@/views/Desktop.vue')
 
       }
