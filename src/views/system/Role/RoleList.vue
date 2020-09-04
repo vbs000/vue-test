@@ -93,8 +93,13 @@
             </span>
             </el-dialog>
             <!-- 分配权限弹框 -->
-            <el-dialog :title="authTitle" :visible.sync="dialogVisible" width="30%">
-            <span>这是一段信息</span>
+            <el-dialog :title="authTitle" class="self_dialog" :visible.sync="dialogVisible" width="25%">
+            <tree
+            :nodes="treeDatas"
+            :setting="setting"
+            @onCheck="ztreeOnCheck"
+            @onCreated="handleCreated"
+            />
             <span slot="footer" class="dialog-footer">
                 <el-button @click="dialogVisible = false">取 消</el-button>
                 <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
@@ -106,7 +111,11 @@
 </template>
 
 <script>
+    import tree from "vue-giant-tree";
     export default {
+        components: {
+            tree
+        },
         methods: {
             //确认新增或编辑
             confirmBtn() {
@@ -134,7 +143,181 @@
             //分配角色事件
             assignRole(row){
                 this.dialogVisible = true;
-                console.log(row);
+                this.treeDatas = [{
+                            "id": 17,
+                            "pid": 0,
+                            "name": "系统管理",
+                            "open": null,
+                            "checked": true
+                            }, {
+                            "id": 18,
+                            "pid": 17,
+                            "name": "用户管理",
+                            "open": null,
+                            "checked": true
+                            }, {
+                            "id": 20,
+                            "pid": 18,
+                            "name": "新增",
+                            "open": null,
+                            "checked": true
+                            }, {
+                            "id": 21,
+                            "pid": 18,
+                            "name": "修改",
+                            "open": null,
+                            "checked": true
+                            }, {
+                            "id": 22,
+                            "pid": 18,
+                            "name": "删除",
+                            "open": null,
+                            "checked": true
+                            }, {
+                            "id": 23,
+                            "pid": 17,
+                            "name": "角色管理",
+                            "open": null,
+                            "checked": true
+                            }, {
+                            "id": 25,
+                            "pid": 23,
+                            "name": "新增",
+                            "open": null,
+                            "checked": true
+                            }, {
+                            "id": 26,
+                            "pid": 23,
+                            "name": "修改",
+                            "open": null,
+                            "checked": true
+                            }, {
+                            "id": 27,
+                            "pid": 23,
+                            "name": "删除",
+                            "open": null,
+                            "checked": true
+                            }, {
+                            "id": 28,
+                            "pid": 17,
+                            "name": "权限管理",
+                            "open": null,
+                            "checked": true
+                            }, {
+                            "id": 30,
+                            "pid": 28,
+                            "name": "新增",
+                            "open": null,
+                            "checked": true
+                            }, {
+                            "id": 31,
+                            "pid": 28,
+                            "name": "修改",
+                            "open": null,
+                            "checked": true
+                            }, {
+                            "id": 32,
+                            "pid": 28,
+                            "name": "删除",
+                            "open": null,
+                            "checked": true
+                            }, {
+                            "id": 33,
+                            "pid": 17,
+                            "name": "机构管理",
+                            "open": null,
+                            "checked": true
+                            }, {
+                            "id": 34,
+                            "pid": 0,
+                            "name": "商品管理",
+                            "open": null,
+                            "checked": true
+                            }, {
+                            "id": 36,
+                            "pid": 34,
+                            "name": "分类管理",
+                            "open": null,
+                            "checked": true
+                            }, {
+                            "id": 37,
+                            "pid": 34,
+                            "name": "品牌管理",
+                            "open": null,
+                            "checked": true
+                            }, {
+                            "id": 38,
+                            "pid": 36,
+                            "name": "新增",
+                            "open": null,
+                            "checked": true
+                            }, {
+                            "id": 39,
+                            "pid": 36,
+                            "name": "编辑",
+                            "open": null,
+                            "checked": true
+                            }, {
+                            "id": 40,
+                            "pid": 37,
+                            "name": "新增",
+                            "open": null,
+                            "checked": true
+                            }, {
+                            "id": 41,
+                            "pid": 37,
+                            "name": "编辑",
+                            "open": null,
+                            "checked": true
+                            }, {
+                            "id": 42,
+                            "pid": 0,
+                            "name": "系统工具",
+                            "open": null,
+                            "checked": true
+                            }, {
+                            "id": 43,
+                            "pid": 42,
+                            "name": "代码生成",
+                            "open": null,
+                            "checked": true
+                            }, {
+                            "id": 46,
+                            "pid": 33,
+                            "name": "新增",
+                            "open": null,
+                            "checked": true
+                            }, {
+                            "id": 76,
+                            "pid": 33,
+                            "name": "编辑",
+                            "open": null,
+                            "checked": true
+                            }, {
+                            "id": 77,
+                            "pid": 42,
+                            "name": "接口文档",
+                            "open": null,
+                            "checked": true
+                            }, {
+                            "id": 78,
+                            "pid": 33,
+                            "name": "删除",
+                            "open": null,
+                            "checked": true
+                            }, {
+                            "id": 79,
+                            "pid": 23,
+                            "name": "分配权限",
+                            "open": null,
+                            "checked": true
+                            }, {
+                            "id": 80,
+                            "pid": 18,
+                            "name": "分配角色",
+                            "open": null,
+                            "checked": true
+                            }];
             },
             //page size改变时调用
             handleSizeChange(val) {
@@ -148,10 +331,53 @@
                 if (this.$refs[formName]) {
                     this.$refs[formName].resetFields();
                 }
-            }
+            },
+            //获取选择的权限
+            ztreeOnCheck(){
+
+            },handleCreated: function(ztreeObj) {
+                console.log("加载树完成");
+                this.ztreeObj = ztreeObj;
+                console.log(this.ztreeObj);
+                // let firstTree = ztreeObj.getNodes()[0];
+                //默认选中第一个
+                // ztreeObj.selectNode(firstTree);
+                //设置节点全部展开
+                ztreeObj.expandAll(true);
+                //加载完自动点击第一个，加载右边表格
+                // this.setting.callback.onClick(null, firstTree.id, firstTree);
+            }                 
+            
         },
         data(){
             return{
+                //ztree的数据
+                treeDatas:[],
+                //ztree对象
+                ztreeObj: null,
+                //ztree配置，参照ztree官网的配置
+                setting: {
+                    check: {
+                        //树是否带复选框或者单选框
+                        enable: true
+                    },
+                    data: {
+                        simpleData: {
+                            //是否使用简单数据模式
+                            enable: true,
+                            //树节点ID，一般是后台数据库主键
+                            idKey: "id",
+                            //父级ID
+                            pIdKey: "pid",
+                            rootPId: "0"
+                        }
+                    },
+                    //ztree回调函数
+                    callback: {
+                        //树选择事件
+                        onCheck: this.ztreeOnCheck
+                    }
+                },  
                 //控制分配权限弹框显示和隐藏
                 dialogVisible:false,
                 //分配权限弹框的标题
@@ -230,5 +456,30 @@
 }
 .el-main{
     padding-top: 5px !important;
+}
+.self_dialog {
+    display: flex;
+    justify-content: center;
+    align-items: Center;
+    overflow: hidden;
+}
+.self_dialog /deep/ .el-dialog {
+    margin: 0 auto !important;
+    height: 90%;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    padding-left: 15px;
+}
+.self_dialog /deep/ .el-dialog .el-dialog__body {
+    padding-top: 5px !important;
+    overflow: hidden;
+    overflow-y: auto;
+    margin-bottom: 40px;
+}
+.self_dialog /deep/ .el-dialog .el-dialog__footer{
+    left: 40%;
+    bottom: 0;
+    position: absolute;
 }
 </style>
