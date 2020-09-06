@@ -142,6 +142,7 @@
             },
             //分配角色事件
             assignRole(row){
+                console.log(row);
                 this.dialogVisible = true;
                 this.treeDatas = [{
                             "id": 17,
