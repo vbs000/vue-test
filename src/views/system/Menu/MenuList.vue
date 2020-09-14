@@ -62,23 +62,247 @@
       label="序号">
     </el-table-column>
   </el-table>   
+
+<!-- 新增权限弹框 -->
+
+<el-dialog
+  :title="dialogTitle"
+  :visible.sync="dialogVisible"
+  width="45%">
+
+  <el-form :inline="true" size="mini" :model="addForm" ref="addForm" label-width="80px">
+          
+
+                <el-row>
+                    <el-col :span="24">
+                    <el-form-item label="菜单类型">
+                      <el-radio-group v-model="addForm.type">
+                      <el-radio :label="0">目录</el-radio>
+                      <el-radio :label="1">菜单</el-radio>
+                      <el-radio :label="2">按钮</el-radio>
+                     </el-radio-group>
+                  </el-form-item>
+                </el-col>
+                </el-row>
+
+                <el-form-item label="上级菜单">
+                    <el-input readonly  v-model="addForm.parentName" @click.native="selectParent"></el-input>
+                </el-form-item>
+                <el-form-item label="权限名称">
+                    <el-input v-model="addForm.label"></el-input>
+                </el-form-item>
+               
+
+                
+                <el-form-item v-if="addForm.type != '2'" label="菜单图标">
+                    <el-input v-model="addForm.icon"></el-input>
+                </el-form-item>
+                <el-form-item v-if="addForm.type == '1'" label="路由名称">
+                    <el-input v-model="addForm.name"></el-input>
+                </el-form-item>
+
+                 <el-form-item v-if="addForm.type != '2'" label="路由地址">
+                    <el-input v-model="addForm.path"></el-input>
+                </el-form-item>
+                <el-form-item v-if="addForm.type == '1'" label="组件路径">
+                    <el-input v-model="addForm.url"></el-input>
+                </el-form-item>
+
+
+                 <el-form-item label="权限标识">
+                    <el-input v-model="addForm.code"></el-input>
+                </el-form-item>
+                <el-form-item label="显示序号">
+                    <el-input-number v-model="addForm.orderNum"></el-input-number>
+                </el-form-item>
+            
+        </el-form>
+
+  <span slot="footer" class="dialog-footer">
+    <el-button @click="dialogVisible = false">取 消</el-button>
+    <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
+  </span>
+</el-dialog>
+
+<!-- 选择上级菜单 -->
+
+<el-dialog
+  title="提示"
+  :visible.sync="parentDialogVisible"
+  width="25%"
+  >
+  <tree :nodes="nodes" :setting="parentSetting" />
+  <span slot="footer" class="dialog-footer">
+    <el-button @click="parentDialogVisible = false">取 消</el-button>
+    <el-button type="primary" @click="parentDialogVisible = false">确 定</el-button>
+  </span>
+</el-dialog>
+
     </el-main>
 </template>
 
 <script>
+    import tree from "vue-giant-tree";
     export default {
+        components: {
+          tree
+        },
         mounted() {
             this.$nextTick(() => {
             this.tableHeight = window.innerHeight - 210; //后面的50：根据需求空出的高度，自行调整
             });
         },
         methods:{
+            //选择上级菜单
+            selectParent(){
+              this.parentDialogVisible = true;
+            },
+            //新增权限点击事件
             addMenu(){
-
+              this.dialogVisible = "新增权限";
+              this.dialogVisible = true;
+            },
+            //上级部门树点击事件
+            ztreeParentOnClick(evt, treeId, treeNode) {
+              this.addForm.parentName = treeNode.name;
+              this.addForm.pid = treeNode.id;
+              console.log(evt);
+              console.log(treeId);
+              console.log(treeNode);
             }
         },
         data() {
         return {
+              nodes: [
+              {
+              id: 0,
+              pid: -1,
+              name: "顶级菜单",
+              open: true,
+              checked: false
+              },
+              {
+              id: 17,
+              pid: 0,
+              name: "系统管理",
+              open: true,
+              checked: false
+              },
+              {
+              id: 18,
+              pid: 17,
+              name: "用户管理",
+              open: true,
+              checked: false
+              },
+              {
+              id: 23,
+              pid: 17,
+              name: "角色管理",
+              open: true,
+              checked: false
+              },
+              {
+              id: 28,
+              pid: 17,
+              name: "权限管理",
+              open: true,
+              checked: false
+              },
+              {
+              id: 33,
+              pid: 17,
+              name: "机构管理",
+              open: true,
+              checked: false
+              },
+              {
+              id: 34,
+              pid: 0,
+              name: "商品管理",
+              open: true,
+              checked: false
+              },
+              {
+              id: 36,
+              pid: 34,
+              name: "分类管理",
+              open: true,
+              checked: false
+              },
+              {
+              id: 37,
+              pid: 34,
+              name: "品牌管理",
+              open: true,
+              checked: false
+              },
+              {
+              id: 42,
+              pid: 0,
+              name: "系统工具",
+              open: true,
+              checked: false
+              },
+              {
+              id: 43,
+              pid: 42,
+              name: "代码生成",
+              open: true,
+              checked: false
+              },
+              {
+              id: 77,
+              pid: 42,
+              name: "接口文档",
+              open: true,
+              checked: false
+              }
+              ],
+            //控制上级部门弹框显示
+            parentDialogVisible: false,
+            //上级树陪
+            parentZtreeObj: null,
+            parentNodes: [], //上级部门树数据
+            //上级部门树配置
+            parentSetting: {
+            view: {
+            showLine: true,
+            showIcon: false,
+            fontCss: { "font-size": "12px", color: "#333" }
+            },
+            //设置这里会显示复选框
+            // check: {
+            // enable: true
+            // },
+            data: {
+            simpleData: {
+            enable: true,
+            idKey: "id",
+            pIdKey: "pid",
+            rootPId: "0"
+            }
+            },
+            callback: {
+            onClick: this.ztreeParentOnClick
+            }
+            },
+            //存储表单数据
+            addForm: {
+              id: "", //编辑id
+              label: "",
+              name: "",
+              type: 0,
+              parentId: "",
+              orderNum: "",
+              parentName: "",
+              path: "",
+              code: "",
+              icon: ""
+            },
+            dialogTitle:'',
+            //控制新增对话框显示隐藏
+            dialogVisible:false,
             //表格高度
             tableHeight:0,
             //搜索数据绑定
@@ -626,5 +850,8 @@
 </script>
 
 <style lang="scss" scoped>
-
+ .el-dialog__wrapper /deep/ .el-dialog__body{
+        padding-top: 10px !important;
+        padding-bottom: 5px !important;
+    }
 </style>
