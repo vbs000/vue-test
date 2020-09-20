@@ -13,6 +13,19 @@ Vue.config.productionTip = false
 //引入fragment解决菜单收缩时文字不能隐藏的问题
 import Fragment from 'vue-fragment'
 Vue.use(Fragment.Plugin)
+import axios from 'axios';
+Vue.prototype.$http = axios;
+//axios拦截器，发送请求之前操作
+axios.interceptors.request.use(config=>{
+  if(config.url.indexOf("/api/user/login") != -1){
+    //以multipart/form-data形式提交
+    config.headers['Content-Type'] =  'multipart/form-data'
+  }else{
+    //以application/json形式提交
+    config.headers['Content-Type'] =  'application/json'
+  }
+  return config;
+})
 //进入路由之前执行
 router.beforeEach((to,from,next) =>{
   //to 将要进入的路由

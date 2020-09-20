@@ -80,9 +80,25 @@ export default {
   },
   methods: {
     submit() {
-      this.$refs.loginForm.validate(valid => {
+        let _this = this;
+      this.$refs.loginForm.validate(async valid => {
         if (valid) {
-          console.log(valid)
+          console.log(valid);
+        //   let param = {
+        //       username:_this.loginForm.username,
+        //       password:_this.loginForm.password,
+        //       code:_this.loginForm.code
+        //   }
+          let formData = new FormData();
+          formData.append("username",_this.loginForm.username);
+          formData.append("password",_this.loginForm.password);
+          formData.append("code",_this.loginForm.code);
+          let {data:res} = await _this.$http.post("/api/user/login",formData);
+          console.log(res);
+          if(res.code == 200){
+              sessionStorage.setItem("token",res.data.token);
+              sessionStorage.setItem("userId",res.data.userId);
+          }
           let menuList = [
                 {
                 children: [
